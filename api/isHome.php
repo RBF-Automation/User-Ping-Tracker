@@ -20,7 +20,7 @@ if (isset($_GET['ip'])) {
             $out = array('result' => false, "message" => 'No Log');
         }
     } catch (Exception $e) {
-        $out = array('result' => false, "message" => 'Exception');
+        $out = array('result' => false, "message" => 'Exception User does not exist');
     }
     
     

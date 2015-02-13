@@ -27,17 +27,21 @@ class User extends Fireball\ORM {
 
         $ID = Fireball\ORM::newRecordAutoIncrement(self::TABLE_NAME, $data);
 
+        return self::fromId($ID);
+
+    }
+    
+    private static function fromId($ID) {
         if (is_numeric($ID)) {
             return new self($ID);
         } else {
             throw new Exception("user creation failed");
         }
-
     }
     
     public static function fromIp($ip) {
         $result = Fireball\ORM::dbSelect(self::PRIMARY_KEY, self::TABLE_NAME, self::IP, $ip);
-        return new self($result);
+        return self::fromId($result);
     }
 
     public static function getUsers() {
