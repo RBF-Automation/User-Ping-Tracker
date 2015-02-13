@@ -34,6 +34,11 @@ class User extends Fireball\ORM {
         }
 
     }
+    
+    public static function fromIp($ip) {
+        $result = Fireball\ORM::dbSelect(self::PRIMARY_KEY, self::TABLE_NAME, self::IP, $ip);
+        return new self($result);
+    }
 
     public static function getUsers() {
         $result = self::mapQuery(self::rawQuery('select * from ' . self::TABLE_NAME, null, true));

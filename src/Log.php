@@ -1,6 +1,7 @@
 <?php
 
 include_once 'DataAccessLayer/Fireball.php';
+include_once 'User.php';
 
 class Log extends Fireball\ORM {
 
@@ -45,6 +46,11 @@ class Log extends Fireball\ORM {
     public static function getLogRecent($lim) {
         $result = self::mapQuery(self::rawQuery('select * from ' . self::TABLE_NAME . ' ORDER BY time DESC limit :lim', array(":lim" => $lim), true));
         return $result;
+    }
+    
+    public static function getUserLastAction($user) {
+        $result = self::mapQuery(self::rawQuery('select * from ' . self::TABLE_NAME . ' where ' . self::USER . ' = :user limit 1', array(":user" => $user->ID()), true));
+        return isset($result[0]) ? $result[0] : null;
     }
 
 }
