@@ -4,7 +4,6 @@ include_once '../SQLConnect.php';
 include_once '../src/Log.php';
 
 if (isset($_GET['ip'])) {
-    
     try {
         $user = User::fromIp($_GET['ip']);
         $lastAction = Log::getUserLastAction($user);
@@ -22,8 +21,6 @@ if (isset($_GET['ip'])) {
     } catch (Exception $e) {
         $out = array('result' => false, "message" => 'Exception User does not exist');
     }
-    
-    
 
 } else {
     $out = array('result' => false, "message" => 'ip not set');
