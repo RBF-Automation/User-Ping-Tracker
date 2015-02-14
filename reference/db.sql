@@ -1,7 +1,9 @@
 
 create table Users (
     ID bigint unsigned NOT NULL AUTO_INCREMENT,
+    remoteId bigint unsigned NOT NULL,
     ip varchar(100) NOT NULL,
+    active int NOT NULL,
     PRIMARY KEY (ID)
 );
 

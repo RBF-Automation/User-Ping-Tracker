@@ -6,11 +6,15 @@ class User extends Fireball\ORM {
 
     const TABLE_NAME  = 'Users';
     const PRIMARY_KEY = 'ID';
+    const REMOTE_ID   = 'remoteId';
     const IP          = 'ip';
+    const ACTIVE      = 'active';
 
     private static $fields = array (
         self::PRIMARY_KEY,
+        self::REMOTE_ID,
         self::IP,
+        self::ACTIVE,
     );
 
     //Override
@@ -20,9 +24,11 @@ class User extends Fireball\ORM {
         $def->setCols(self::$fields);
     }
 
-    public static function createNew($ip) {
+    public static function createNew($ip, $remoteId) {
         $data = array (
-            self::IP    => $ip,
+            self::REMOTE_ID => $remoteId,
+            self::IP        => $ip,
+            self::ACTIVE    => 1,
         );
 
         $ID = Fireball\ORM::newRecordAutoIncrement(self::TABLE_NAME, $data);
@@ -45,7 +51,7 @@ class User extends Fireball\ORM {
     }
 
     public static function getUsers() {
-        $result = self::mapQuery(self::rawQuery('select * from ' . self::TABLE_NAME, null, true));
+        $result = self::mapQuery(self::rawQuery('select * from ' . self::TABLE_NAME . ' where active = 1', null, true));
         return $result;
     }
 
