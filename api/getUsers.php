@@ -7,7 +7,23 @@ $users = User::getUsers();
 
 $out = array();
 foreach ($users as $user) {
-    $out[] = $user->ip();
+    $lastAction = Log::getUserLastAction($user);
+    
+    $home = false;
+    
+    if ($lastAction != null) {
+        if ($lastAction->isHome() == 1) {
+            $home = true;
+        }
+    }
+            
+            
+    $out[] = array(
+        'ip' => $user->ip(),
+        'user' => $user->remoteId(),
+        'isHome' => $home,
+    );
+    
 }
 
 echo json_encode($out);
