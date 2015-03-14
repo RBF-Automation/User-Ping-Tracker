@@ -4,19 +4,18 @@
     include_once 'LocalizedTimeStamp.php';
     
     
-    $file = "brian.csv";
+    $file = "brian1.csv";
     $arr = array_map('str_getcsv', file($file));
     
-    $data = new Data($arr);
-    $data->normalize();
-    $average = $data->average();
+    $data = new Data($arr, 3, 2);
+    $average = $data->getPeakAverage();
     
     
     $x = array();
     $y = array();
     foreach ($average as $key => $val) {
         //echo LocalizedTimeStamp::parseToInt($key) . " " . $key . "\n";
-        $x[] = LocalizedTimeStamp::parseToInt($key);
+        $x[] = $key;
         $y[] = $val * 100;
     }
     

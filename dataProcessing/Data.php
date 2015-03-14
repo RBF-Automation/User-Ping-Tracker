@@ -6,33 +6,72 @@ class Data {
     
     private $rawData;
     private $dayFrameData;
-    private $normalizedData;
+    private $allDates;
+    private $peakSyncedData;
+    private $peakAverage;
     
-    function __construct($data) {
+    private $timeIndex;
+    private $valIndex;
+    
+    public function __construct($data, $timeIndex, $valIndex) {
         $this->rawData = $data;
+        $this->timeIndex = $timeIndex;
+        $this->valIndex = $valIndex;
     }
     
-    function normalize() {
-        $dayFramedata = array();
-        
-        $TIME = 3;
-        $VAL = 2;
+    public function getRawdata() {
+        return $this->rawData;
+    }
+    
+    public function getDayFrameData() {
+        if ($this->normalizedData == null) {
+            $this->normalizeDayFrame();
+        }
+        return $this->normalizedData;
+    }
+    
+    public function getPeakSyncdata() {
+        if ($this->peakSyncedData == null) {
+            $this->peakSync();
+        }
+        return $this->peakSyncedData;
+    }
+    
+    public function getPeakAverage() {
+        if ($this->peakSyncedData == null) {
+            $this->peakAverage();
+        }
+        return $this->peakAverage;
+    }
+    
+    
+    /**
+     * Breaks data into normalized weeks. 
+     */
+    public function normalizeDayFrame() {
+        $this->dayFramedata = array();
         
         $dayIndex = 0;
         $lastDay = "";
         foreach ($this->rawData as $point) {
-            $day = date('N', $point[$TIME]);
+            $day = date('N', $point[$this->timeIndex]);
             if ($lastDay > $day) {
                 $dayIndex++;
             }
-            $time = new LocalizedTimeStamp($point[$TIME]);
-            $this->dayFrameData[$dayIndex][] = array($time, $point[$VAL]);
+            $time = LocalizedTimeStamp::fromUnix($point[$this->timeIndex]);
+            $this->dayFrameData[$dayIndex][] = array($time->intVal(), $point[$this->valIndex]);
             $lastDay = $day;
         }
         
+        
+        return $this->dayFramedata;
     }
     
-    function average() {
+    public function peakSync() {
+        
+        if ($this->dayFrameData == null) {
+            $this->normalizeDayFrame();
+        }
         
         $pointTracker = array();
         
@@ -53,10 +92,10 @@ class Data {
         
         
         $done = false;
-        $normalData = array();
+        $this->peakSyncedData = array();
         $dayFrameData = $this->dayFrameData;
         
-        $allDates = array();
+        $this->allDates = array();
         
         while (!$done) {
             
@@ -69,7 +108,7 @@ class Data {
                         $trackKey = $i;
                     }
                 } else {
-                    if (isset($dayFrameData[$i][0]) && $dayFrameData[$i][0][0]->isLessThan($current[0])) {
+                    if (isset($dayFrameData[$i][0]) && $dayFrameData[$i][0][0] < $current[0]) {
                         $current = $dayFrameData[$i][0];
                         $trackKey = $i;
                     }
@@ -79,8 +118,8 @@ class Data {
             unset($dayFrameData[$trackKey][0]);
             $dayFrameData[$trackKey] = array_values($dayFrameData[$trackKey]);
             
-            if (!in_array($current[0]->getString(), $allDates)) {
-                $allDates[] = $current[0]->getString(); 
+            if (!in_array($current[0], $this->allDates)) {
+                $this->allDates[] = $current[0]; 
             }
             
             if (!isset($pointTracker[$trackKey]) || $pointTracker[$trackKey] != $current[1]) {
@@ -89,7 +128,7 @@ class Data {
             
             for ($i = 0; $i < sizeof($pointTracker); $i++) {
                 if ($pointTracker[$i] != null) {
-                    $normalData[$i][$current[0]->getString()] = $pointTracker[$i];
+                    $this->peakSyncedData[$i][$current[0]] = $pointTracker[$i];
                 }
             }
             
@@ -102,23 +141,27 @@ class Data {
             }
             
         }
+    }
+    
+    public function peakAverage() {
         
-        $average = array();
+        if ($this->peakSyncedData == null) {
+            $this->peakSync();
+        }
         
-        foreach ($allDates as $date) {
+        $this->peakAverage = array();
+        
+        foreach ($this->allDates as $date) {
             $sum = 0;
             $avgCount = 0;
-            foreach ($normalData as $dayFrame) {
+            foreach ($this->peakSyncedData as $dayFrame) {
                 if (isset($dayFrame[$date])) {
                     $sum += $dayFrame[$date];
                     $avgCount++;
                 }
             }
-            $average[$date] = $sum/$avgCount;
+            $this->peakAverage[$date] = $sum/$avgCount;
         }
-        
-        return $average;
-        
         
     }
     
