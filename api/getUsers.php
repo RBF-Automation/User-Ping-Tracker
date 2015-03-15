@@ -25,7 +25,7 @@ foreach ($users as $user) {
         $fortuneTeller = new FortuneTeller($data);
         
         $timeTest = LocalizedTimeStamp::fromUnix(time());
-        $status = $fortuneTeller->timeToEvent($timeTest, $lastAction->isHome(), .7);
+        $status = $fortuneTeller->timeToEvent($timeTest, !$lastAction->isHome(), .7);
     }
     
     if ($status != null) {
