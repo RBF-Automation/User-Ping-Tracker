@@ -42,6 +42,11 @@ class Log extends Fireball\ORM {
         }
 
     }
+    
+    public static function getRawData($user) {
+        $result = self::rawQuery('select * from ' . self::TABLE_NAME . ' where User = :user ORDER BY time ASC', array(":user" => $user->ID()));
+        return $result;
+    }
 
     public static function getLogRecent($lim) {
         $result = self::mapQuery(self::rawQuery('select * from ' . self::TABLE_NAME . ' ORDER BY time DESC limit :lim', array(":lim" => $lim), true));
