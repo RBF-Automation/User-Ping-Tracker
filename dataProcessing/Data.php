@@ -67,6 +67,22 @@ class Data {
         return $this->dayFramedata;
     }
     
+    /**
+    * Run Pre peak 
+    */
+    public function runPrePeak() {
+        $newData = array();
+        
+        foreach ($this->rawData as $key => $point) {
+            $newData[] = array( $this->timeIndex => $point[$this->timeIndex] - 1, $this->valIndex => !$point[$this->valIndex] );
+            $newData[] = $point;
+        }
+        
+        $this->rawData = $newData;
+        
+        
+    }
+    
     public function peakSync() {
         
         if ($this->dayFrameData == null) {

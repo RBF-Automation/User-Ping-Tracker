@@ -8,6 +8,7 @@
     $arr = array_map('str_getcsv', file($file));
     
     $data = new Data($arr, 3, 2);
+    $data->runPrePeak();
     $average = $data->getPeakAverage();
     
     

@@ -2,7 +2,7 @@
 
     include_once 'FortuneTeller.php';
     
-    $file = "brian1.csv";
+    $file = "brian.csv";
     $arr = array_map('str_getcsv', file($file));
     
     $data = new Data($arr, 3, 2);
@@ -12,7 +12,7 @@
     $timeTest = LocalizedTimeStamp::fromUnix(time());
     
     
-    $t = $f->timeToEvent($timeTest, 0, .5);
+    $t = $f->timeToEvent($timeTest, 0, .7);
     
     $time = LocalizedTimeStamp::fromInt($t['timeTo']);
     $range = LocalizedTimeStamp::fromInt($t['duration']);
