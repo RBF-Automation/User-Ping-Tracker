@@ -36,7 +36,7 @@ foreach ($users as $user) {
         if ($home) {
             $userStatus = "Likely to leave in " . $time->getHours() . " hours and " . $time->getMins() . " minutes for about " . $range->getHours() . " hours and " . $range->getMins() . " minutes.";
         } else {
-            $userStatus = "Likely to be home in " . $time->getHours() . " hours and " . $time->getMins() . " minutes for about " . $range->getHours() . " hours and " . $range->getMins() . " minutes.";
+            $userStatus = "Likely to be back in " . $time->getHours() . " hours and " . $time->getMins() . " minutes for about " . $range->getHours() . " hours and " . $range->getMins() . " minutes.";
         }
     }
     
