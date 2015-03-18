@@ -42,7 +42,6 @@ foreach ($users as $user) {
     
     $out[] = array(
         'ip' => $user->ip(),
-        'user' => $user->remoteId(),
         'isHome' => $home,
         'status' => $userStatus,
     );

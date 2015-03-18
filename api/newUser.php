@@ -1,18 +1,17 @@
 <?php
 include_once '../SQLConnect.php';
 include_once '../src/User.php';
-if (isset($_GET['ip']) && isset($_GET['id'])) {
+if (isset($_GET['ip'])) {
     
     try {
         $user = User::fromIp($_GET['ip']);
         $user->active(1);
-        $user->remoteId($_GET['id']);
         $out = array('result' => true, "message" => 'done');
         
     } catch (Exception $e) {
     
         try {
-            $user = User::CreateNew($_GET['ip'], $_GET['id']);
+            $user = User::CreateNew($_GET['ip']);
             if ($user != false) {
                 $out = array('result' => true);
             } else {

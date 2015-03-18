@@ -1,8 +1,7 @@
 
 create table Users (
     ID bigint unsigned NOT NULL AUTO_INCREMENT,
-    remoteId bigint unsigned NOT NULL,
-    ip varchar(100) NOT NULL,
+    ip varchar(100) NOT NULL UNIQUE,
     active int NOT NULL,
     PRIMARY KEY (ID)
 );
@@ -17,6 +16,7 @@ create table Log (
     FOREIGN KEY (user) REFERENCES Users(ID)
 );
 
+create index IpIndex on Users(ip);
 create index TimeIndex on Log(time);
 create index IsHomeIndex on Log(isHome);
 create index userIndex on Log(user);
